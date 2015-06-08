@@ -1,6 +1,6 @@
 # gui.py, part for parse_video : a fork from parseVideo. 
 # gui: o/ffmpeg_tkgui/gui: parse_video Tk GUI, main gui file. 
-# version 0.0.3.0 test201506082029
+# version 0.0.4.0 test201506082104
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -30,16 +30,20 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import tix, font, filedialog
 
+from . import gui_base
+from . import gui_merge
+from . import gui_setting
+
 # global vars
 
 TEXT_MAIN_FONT_SIZE = 16	# 16px
 MAIN_WIN_TITLE = 'ffmpeg Tk GUI,  ffmpeg 图形界面 (parse_video) 1 '
 MAIN_FONT_NAME = '微软雅黑'
 MAIN_PAGE_NAME = [
-    '  合 并  ', 
-    '  日 志  ', 
-    '  设 置  ', 
-    '  帮 助  ', 
+    '    合 并                ', 
+    '    日 志                ', 
+    '    设 置                ', 
+    '    帮 助                ', 
 ]
 
 # functions
@@ -84,7 +88,7 @@ class MainWin(object):
         # create sub part
         pf = self.pf
         # create merge
-        p = PartMerge()
+        p = gui_merge.PartMerge()
         p.start(pf[0])
         self.p.append(p)
         # create log
@@ -92,7 +96,7 @@ class MainWin(object):
         p.start(pf[1], font=mf)
         self.p.append(p)
         # create Setting
-        p = PartSetting()
+        p = gui_setting.PartSetting()
         p.start(pf[2])
         self.p.append(p)
         # create about part
@@ -117,101 +121,6 @@ class MainWin(object):
     
     # end MainWin class
 
-# entry box, easy text Entry support
-class EntryBox(object):
-    
-    def __init__(self):
-        self.parent = None
-        self.e = None	# Entry
-        self.v = None	# StringVar
-    
-    # create sub elements
-    def start(self, parent, font=None, style='TEntry'):
-        # create UI
-        v = StringVar()
-        e = Entry(parent, textvariable=v, font=font, style=style)
-        # NOTE should be pack
-        # save it
-        self.parent = parent
-        self.v = v
-        self.e = e
-        # create UI done
-    
-    # entry operations
-    def get_text(self):
-        return self.v.get()
-    
-    def set_text(self, text):
-        self.v.set(text)
-    
-    # end EntryBox class
-
-# text part, TextBox, Text and Scrollbars, simple text part
-class TextBox(object):
-    
-    def __init__(self):
-        self.parent = None	# parent element
-        
-        self.t = None	# Text
-        self.sx = None	# x Scrollbar
-        self.sy = None	# y Scrollbar
-        
-        # init end
-    
-    # start create sub elements
-    def start(self, parent, font=None, bg='#ddd', fg='#333'):	# parent element
-        # create UI
-        sx = Scrollbar(parent, orient=HORIZONTAL)
-        sy = Scrollbar(parent, orient=VERTICAL)
-        t = Text(parent, wrap=NONE, font=font, padx=0, pady=0, relief=FLAT, bd=0, bg=bg, fg=fg)
-        
-        # pack it
-        sy.pack(side=RIGHT, fill=Y)
-        sx.pack(side=BOTTOM, fill=X)
-        t.pack(side=TOP, fill=BOTH, expand=True)
-        # set scrollbar
-        sx.config(command=t.xview)
-        sy.config(command=t.yview)
-        t.config(xscrollcommand=sx.set)
-        t.config(yscrollcommand=sy.set)
-        
-        # save it
-        self.parent = parent
-        self.t = t
-        self.sx = sx
-        self.sy = sy
-        # create UI done
-    
-    # text part operations
-    def enable(self):
-        self.t.config(state=NORMAL)
-    
-    def disable(self):
-        self.t.config(state=DISABLED)
-    
-    def get_text(self):	# get all text
-        return self.t.get('1.0', END)
-    
-    def clear(self):	# delete all text
-        self.t.delete('1.0', END)
-    
-    def add_text(self, text='', pos=END):
-        self.t.insert(pos, text)
-    
-    # end TextBox class
-
-# merge part
-class PartMerge(object):
-    
-    def __init__(self):
-        self.parent = None
-        pass
-    
-    def start(self, parent):
-        pass
-    
-    # end PartMerge class
-
 # log part
 class PartLog(object):
     
@@ -219,29 +128,36 @@ class PartLog(object):
         self.parent = None
         
         self.t = None	# TextBox
-        
     
     def start(self, parent, font=None):
         
         # just create TextBox
-        self.t = TextBox()
+        self.t = gui_base.TextBox()
         self.t.start(parent, font=font)
+        # set log init text
+        t = self.t
+        t.enable()
+        t.clear()
+        t.add_text(PART_LOG_INIT_TEXT)
+        # create UI done
+    
+    def log_time(self):
         # TODO
         pass
     
+    def log_text(self, text=''):
+        # just write text
+        t = self.t
+        t.add_text(text)
+    
     # end PartLog class
 
-# setting part
-class PartSetting(object):
-    
-    def __init__(self):
-        self.parent = None
-        pass
-    
-    def start(self, parent):
-        pass
-    
-    # end PartSetting class
+# PartLog init text
+PART_LOG_INIT_TEXT = '''
+日志: 以下显示的是 ffmpeg 图形界面 (本程序) 运行过程中产生的日志信息文本. 
+=====================================================================
+
+'''
 
 # about part
 class PartAbout(object):
@@ -253,12 +169,44 @@ class PartAbout(object):
     
     def start(self, parent, font=None):
         # just create TextBox
-        self.t = TextBox()
+        self.t = gui_base.TextBox()
         self.t.start(parent, font=font)
-        # TODO
-        pass
+        # set main text
+        t = self.t
+        t.enable()
+        t.clear()
+        t.add_text(PART_ABOUT_TEXT)
+        t.disable()
+        # create UI done
     
     # end PartAbout class
+
+# About text
+PART_ABOUT_TEXT = '''
+关于
+
+    ffmpeg Tk GUI,  ffmpeg 图形界面 (parse_video) 1
+           version 0.0.0.1 test201506082042
+
+    本程序为 ffmpeg 的 合并视频文件功能 提供 图形界面. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+更多帮助信息, 请见
+    https://github.com/sceext2/parse_video/wiki/zh_cn-easy-guide
+
+copyright 2015 sceext <sceext@foxmail.com>
+'''
 
 # debug
 def test():
