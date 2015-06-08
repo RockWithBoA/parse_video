@@ -1,6 +1,6 @@
 # gui.py, part for parse_video : a fork from parseVideo. 
 # gui: o/ffmpeg_tkgui/gui: parse_video Tk GUI, main gui file. 
-# version 0.0.4.0 test201506082104
+# version 0.0.5.0 test201506082219
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -75,7 +75,7 @@ class MainWin(object):
         mf = font.Font(root, size=TEXT_MAIN_FONT_SIZE)	# main font
         style = Style()
         style.configure('.', font=(MAIN_FONT_NAME, TEXT_MAIN_FONT_SIZE))
-        style.configure('My.TEntry', padding=5)
+        style.configure('TEntry', padding=5)
         
         # create Notebook and each pages
         nb = Notebook(root, padding=0)
@@ -89,7 +89,7 @@ class MainWin(object):
         pf = self.pf
         # create merge
         p = gui_merge.PartMerge()
-        p.start(pf[0])
+        p.start(pf[0], font=mf)
         self.p.append(p)
         # create log
         p = PartLog()
@@ -216,10 +216,6 @@ def test():
     # start mainloop
     w.mainloop()
     # test done
-
-# auto start test
-if __name__ == '__main__':
-    test()
 
 # end gui.py
 

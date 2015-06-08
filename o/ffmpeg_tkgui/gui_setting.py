@@ -1,6 +1,6 @@
 # gui_setting.py, part for parse_video : a fork from parseVideo. 
 # gui_setting: o/ffmpeg_tkgui/gui_setting: PartSetting for ffmpeg Tk GUI. 
-# version 0.0.1.0 test201506082102
+# version 0.0.1.1 test201506082107
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -30,7 +30,7 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import tix, font, filedialog
 
-from import gui_base
+from . import gui_base
 
 # global vars
 

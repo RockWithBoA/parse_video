@@ -1,6 +1,6 @@
 # gui_base.py, part for parse_video : a fork from parseVideo. 
 # gui_base: o/ffmpeg_tkgui/gui_base: base part for ffmpeg Tk GUI. 
-# version 0.0.1.0 test201506082057
+# version 0.0.3.0 test201506082218
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -118,6 +118,48 @@ class TextBox(object):
         self.t.insert(pos, text)
     
     # end TextBox class
+
+# label, entry, button three obj in one line
+class LabelEntryButton(object):
+    
+    def __init__(self):
+        self.parent = None
+        self.l = None	# Label
+        self.e = None	# EntryBox
+        self.b = None	# Button
+        
+        self.callback_b = None	# Button click callback
+    
+    def start(self, parent, label_text='', button_text='', font=None):
+        # create sub obj
+        b = Button(parent, command=self._on_button_click, text=button_text, style='TButton')
+        e = EntryBox()
+        l = Label(parent, text=label_text, font=font)
+        # pack element
+        l.pack(side=LEFT, fill=Y, expand=False)
+        b.pack(side=RIGHT, fill=Y, expand=False)
+        e.start(parent, font=font)
+        e.e.pack(side=LEFT, fill=BOTH, expand=True)
+        
+        # save it
+        self.l = l
+        self.e = e
+        self.b = b
+        # create UI done
+    
+    # event callbacks
+    def _on_button_click(self, event=None):
+        if self.callback_b != None
+            self.callback_b()
+    
+    # operactions
+    def get_text(self):
+        return self.e.get_text()
+    
+    def set_text(self, text=''):
+        self.e.set_text(text)
+    
+    # end LabelEntryButton class
 
 # end gui_base.py
 
