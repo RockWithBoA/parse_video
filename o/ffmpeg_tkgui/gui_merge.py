@@ -1,6 +1,6 @@
 # gui_merge.py, part for parse_video : a fork from parseVideo. 
 # gui_merge: o/ffmpeg_tkgui/gui_merge: PartMerge for ffmpeg Tk GUI. 
-# version 0.0.2.0 test201506082218
+# version 0.0.3.0 test201506082235
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -44,7 +44,7 @@ BUTTON_BAR_TEXT = [
 
 BOTTOM_OUT_TEXT = ['合并输出', '更改']
 BOTTOM_LIST_TEXT = ['列表文件', '导入']
-BOTTOM_START_BUTTON_TEXT = '  开 始 合 并  '
+BOTTOM_START_BUTTON_TEXT = '开    始    合    并'
 
 # functions
 
@@ -77,7 +77,7 @@ class PartMerge(object):
         bp = BottomPart()
         # pack obj
         f1 = Frame(parent)
-        top.start(top)
+        top.start(f1)
         f1.pack(side=TOP, fill=X, expand=False)
         
         f2 = Frame(parent)
@@ -155,15 +155,19 @@ class TopButtonBar(object):
         # pack obj
         b1.pack(side=LEFT, fill=Y, expand=False)
         
+        # set Separator Style
+        style = Style()
+        style.configure('TSeparator', padding=5)
+        
         # add one Separator
-        s = Separator(parent, orient=VERTICAL)
+        s = Separator(parent, orient=VERTICAL, style='TSeparator')
         s.pack(side=LEFT, fill=Y, expand=False)
         
         b2.pack(side=LEFT, fill=Y, expand=False)
         b3.pack(side=LEFT, fill=Y, expand=False)
         
         # add one Separator
-        s = Separator(parent, orient=VERTICAL)
+        s = Separator(parent, orient=VERTICAL, style='TSeparator')
         s.pack(side=LEFT, fill=Y, expand=False)
         
         b4.pack(side=LEFT, fill=Y, expand=False)
@@ -171,7 +175,7 @@ class TopButtonBar(object):
         b5.pack(side=RIGHT, fill=Y, expand=False)
         
         # add one Separator
-        s = Separator(parent, orient=VERTICAL)
+        s = Separator(parent, orient=VERTICAL, style='TSeparator')
         s.pack(side=RIGHT, fill=Y, expand=False)
         
         # save it
@@ -251,7 +255,7 @@ class BottomPart(object):
         
         # set callback
         out.callback_b = self._on_button_output
-        out.callback_b = self._on_button_list
+        listf.callback_b = self._on_button_list
         
         # save obj
         self.bar_output = out

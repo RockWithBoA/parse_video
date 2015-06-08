@@ -1,6 +1,6 @@
 # gui_base.py, part for parse_video : a fork from parseVideo. 
 # gui_base: o/ffmpeg_tkgui/gui_base: base part for ffmpeg Tk GUI. 
-# version 0.0.3.0 test201506082218
+# version 0.0.4.0 test201506082234
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -149,7 +149,7 @@ class LabelEntryButton(object):
     
     # event callbacks
     def _on_button_click(self, event=None):
-        if self.callback_b != None
+        if self.callback_b != None:
             self.callback_b()
     
     # operactions
