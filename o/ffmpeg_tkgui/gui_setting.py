@@ -1,6 +1,6 @@
 # gui_setting.py, part for parse_video : a fork from parseVideo. 
 # gui_setting: o/ffmpeg_tkgui/gui_setting: PartSetting for ffmpeg Tk GUI. 
-# version 0.0.2.0 test201506091254
+# version 0.0.3.0 test201506091957
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -40,7 +40,7 @@ BOTTOM_PART_TITLE = '高级'
 BOTTOM_PART_TITLE_BUTTON_TEXT = ['刷新', '保存高级设置']
 
 TOP_ITEM1_TEXT = ['默认输出目录', '更改']
-TOP_ITEM2_TEXT = ['自动更改默认输出目录为最后一次的输出目录', ['开启', '关闭']]
+TOP_ITEM2_TEXT = ['自动更改默认输出目录为最后一次的输出目录', ['    开启    ', '    关闭    ']]
 
 BITEM_TEXT1 = ['ffmpeg 可执行文件', '更改']
 BITEM_TEXT2 = ['临时文件目录', '更改']
@@ -74,10 +74,17 @@ class PartSetting(object):
     # TODO on sub event
     
     def start(self, parent, font=None):
+        # create style
+        style = Style()
+        style.configure('MyTitle.TLabel', font=('', 20, 'bold'))
+        
         # create sub
-        host_t = gui_base.TextBox()
+        host_t = tix.ScrolledWindow(parent, scrollbar='auto')
         self.parent = parent
         self.host_t = host_t
+        host_f = tix.Frame(host_t.window)
+        host_f.pack(side=TOP, fill=X, expand=False)
+        self.host_f = host_f
         
         top = TopBox()
         self.top = top
@@ -86,20 +93,14 @@ class PartSetting(object):
         self.b = b
         
         # pack it
-        host_t.start(parent, font=font)
-        host_t.enable()
-        host_t.clear()
-        host_f = host_t.insert_frame()	# create host frame
-        host_f.pack(side=TOP, fill=BOTH, expand=True)
-        host_t.disable()
-        self.host_f = host_f
+        host_t.pack(side=TOP, fill=BOTH, expand=True)
         
         f1 = Frame(host_f)
         top.start(f1, font=font)
         f1.pack(side=TOP, fill=X, expand=False)
         
-        s1 = Sepacator(host_f, orient=HORIZONTAL, style='TSeparator')
-        s1.pack(side=TOP, fill=X, expand=False)
+        s1 = Separator(host_f, orient=HORIZONTAL, style='TSeparator')
+        s1.pack(side=TOP, fill=X, expand=False, pady=13)
         
         f2 = Frame(host_f)
         b.start(f2, font=font)
@@ -172,7 +173,7 @@ class TopBoxTitle(object):
     
     def start(self, parent):
         # create element
-        l1 = Label(parent, text=TOP_PART_TITLE)
+        l1 = Label(parent, text=TOP_PART_TITLE, style='MyTitle.TLabel')
         l2 = Label(parent, text=TOP_PART_TITLE_RIGHT)
         self.parent = parent
         self.l1 = l1
@@ -231,23 +232,23 @@ class BottomBox(object):
         f2.pack(side=TOP, fill=X, expand=False)
         
         f3 = Frame(parent)
-        item1.start(f3, label_text=BITEM_TEXT2[0], button_text=BITEM_TEXT2[1], font=font)
+        item2.start(f3, label_text=BITEM_TEXT2[0], button_text=BITEM_TEXT2[1], font=font)
         f3.pack(side=TOP, fill=X, expand=False)
         
         f4 = Frame(parent)
-        item1.start(f4, label_text=BITEM_TEXT3, font=font)
+        item3.start(f4, label_text=BITEM_TEXT3, font=font)
         f4.pack(side=TOP, fill=X, expand=False)
         
         f5 = Frame(parent)
-        item1.start(f5, label_text=BITEM_TEXT4[0], button_text=BITEM_TEXT4[1], font=font)
+        item4.start(f5, label_text=BITEM_TEXT4[0], button_text=BITEM_TEXT4[1], font=font)
         f5.pack(side=TOP, fill=X, expand=False)
         
         f6 = Frame(parent)
-        item1.start(f6, label_text=BITEM_TEXT5[0], button_text=BITEM_TEXT5[1], font=font)
+        item5.start(f6, label_text=BITEM_TEXT5[0], button_text=BITEM_TEXT5[1], font=font)
         f6.pack(side=TOP, fill=X, expand=False)
         
         f7 = Frame(parent)
-        item1.start(f7, label_text=BITEM_TEXT6[0], button_text=BITEM_TEXT6[1], font=font)
+        item6.start(f7, label_text=BITEM_TEXT6[0], button_text=BITEM_TEXT6[1], font=font)
         f7.pack(side=TOP, fill=X, expand=False)
         
         # TODO
@@ -280,7 +281,7 @@ class BottomBoxTitle(object):
     
     def start(self, parent):
         # create obj
-        l = Label(parent, text=BOTTOM_PART_TITLE)
+        l = Label(parent, text=BOTTOM_PART_TITLE, style='MyTitle.TLabel')
         b1 = Button(parent, command=self._on_sub_refresh, text=BOTTOM_PART_TITLE_BUTTON_TEXT[0])
         b2 = Button(parent, command=self._on_sub_save, text=BOTTOM_PART_TITLE_BUTTON_TEXT[1])
         self.parent = parent

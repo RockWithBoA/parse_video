@@ -1,6 +1,6 @@
 # gui.py, part for parse_video : a fork from parseVideo. 
 # gui: o/ffmpeg_tkgui/gui: parse_video Tk GUI, main gui file. 
-# version 0.0.5.0 test201506082219
+# version 0.0.6.0 test201506091958
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -66,7 +66,7 @@ class MainWin(object):
     # start create and show main window
     def start(self):
         # create root window
-        root = Tk()
+        root = tix.Tk()
         self.root = root
         # set main window title
         root.title(MAIN_WIN_TITLE)
@@ -76,6 +76,7 @@ class MainWin(object):
         style = Style()
         style.configure('.', font=(MAIN_FONT_NAME, TEXT_MAIN_FONT_SIZE))
         style.configure('TEntry', padding=5)
+        style.configure('TSeparator', padding=5)
         
         # create Notebook and each pages
         nb = Notebook(root, padding=0)
@@ -97,7 +98,7 @@ class MainWin(object):
         self.p.append(p)
         # create Setting
         p = gui_setting.PartSetting()
-        p.start(pf[2])
+        p.start(pf[2], font=mf)
         self.p.append(p)
         # create about part
         p = PartAbout()

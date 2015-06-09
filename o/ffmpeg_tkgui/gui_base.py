@@ -1,6 +1,6 @@
 # gui_base.py, part for parse_video : a fork from parseVideo. 
 # gui_base: o/ffmpeg_tkgui/gui_base: base part for ffmpeg Tk GUI. 
-# version 0.0.8.0 test201506091254
+# version 0.0.9.0 test201506091957
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -139,9 +139,9 @@ class LabelEntryButton(object):
         
         self.callback_b = None	# Button click callback
     
-    def start(self, parent, label_text='', button_text='', font=None):
+    def start(self, parent, label_text='', button_text='', font=None, button_style='TButton'):
         # create sub obj
-        b = Button(parent, command=self._on_button_click, text=button_text, style='TButton')
+        b = Button(parent, command=self._on_button_click, text=button_text, style=button_style)
         e = EntryBox()
         l = Label(parent, text=label_text, font=font)
         # pack element
@@ -244,8 +244,8 @@ class SwitchLabelBox(object):
         self.parent = parent
         # create styles
         style = Style()
-        style.configure('SwitchLabelBoxOff.TLabel', background='#ccc', foreground='#444')
-        style.configure('SwitchLabelBoxOn.TLabel', background='#00f', foreground='#fff')
+        style.configure('SwitchLabelBoxOff.TLabel', background='#ccc', foreground='#444', padding=5)
+        style.configure('SwitchLabelBoxOn.TLabel', background='#00f', foreground='#fff', padding=5)
         # set default status
         self.set_status(status)
         # pack sub

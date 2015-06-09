@@ -1,6 +1,6 @@
 # gui_merge.py, part for parse_video : a fork from parseVideo. 
 # gui_merge: o/ffmpeg_tkgui/gui_merge: PartMerge for ffmpeg Tk GUI. 
-# version 0.0.3.0 test201506082235
+# version 0.0.4.0 test201506091958
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -56,6 +56,9 @@ class PartMerge(object):
     def __init__(self):
         self.parent = None
         
+        self.m_f = None	# main Frame
+        self.m_s = None	# main ScrolledWindow, tix
+        
         self.top_bar = None	# TopButtonBar
         self.main_list = None	# MainFileList
         self.bp = None	# ButtonPart
@@ -71,20 +74,42 @@ class PartMerge(object):
     # TODO on sub event
     
     def start(self, parent, font=None):
+        # create styles
+        style = Style()
+        style.configure('MyBlue.TButton', background='#00f', foreground='#fff', relief='flat')
+        style.map('MyBlue.TButton', background=[('pressed', '#008'), ('active', '#44f')], foreground=[('disabled', '#555'), ('pressed', '#0f0'), ('active', '#ff0')])
+        style.configure('MyRed.TButton', background='#f00', foreground='#fff', relief='flat')
+        style.map('MyRed.TButton', background=[('pressed', '#800'), ('active', '#f44')], foreground=[('disabled', '#555'), ('pressed', '#0f0'), ('active', '#ff0')])
+        
+        # create scrolled window and main frame
+        m_s = tix.ScrolledWindow(parent, scrollbar='auto')
+        m_f = Frame(m_s.window)
+        m_s.pack(side=TOP, fill=BOTH, expand=True)
+        m_f.pack(side=TOP, fill=BOTH, expand=True)
+        self.m_s = m_s
+        self.m_f = m_f
+        
         # creat obj
         top = TopButtonBar()
         mlist = MainFileList()
         bp = BottomPart()
+        
         # pack obj
-        f1 = Frame(parent)
+        f1 = Frame(m_f)
         top.start(f1)
         f1.pack(side=TOP, fill=X, expand=False)
         
-        f2 = Frame(parent)
+        s1 = Separator(m_f, orient=HORIZONTAL, style='TSeparator')
+        s1.pack(side=TOP, fill=X, expand=False)
+        
+        f2 = Frame(m_f)
         mlist.start(f2)
         f2.pack(side=TOP, fill=BOTH, expand=True)
         
-        f3 = Frame(parent)
+        s2 = Separator(m_f, orient=HORIZONTAL, style='TSeparator')
+        s2.pack(side=TOP, fill=X, expand=False)
+        
+        f3 = Frame(m_f)
         bp.start(f3, font=font)
         f3.pack(side=BOTTOM, fill=X, expand=False)
         
@@ -146,11 +171,11 @@ class TopButtonBar(object):
     # create ui
     def start(self, parent):
         # create obj
-        b1 = Button(parent, command=self._on_b_add_file, text=BUTTON_BAR_TEXT[0], style='TButton')
+        b1 = Button(parent, command=self._on_b_add_file, text=BUTTON_BAR_TEXT[0], style='MyBlue.TButton')
         b2 = Button(parent, command=self._on_b_move_up, text=BUTTON_BAR_TEXT[1], style='TButton')
         b3 = Button(parent, command=self._on_b_move_down, text=BUTTON_BAR_TEXT[2], style='TButton')
         b4 = Button(parent, command=self._on_b_sort_by_filename, text=BUTTON_BAR_TEXT[3], style='TButton')
-        b5 = Button(parent, command=self._on_b_delete_selected, text=BUTTON_BAR_TEXT[4], style='TButton')
+        b5 = Button(parent, command=self._on_b_delete_selected, text=BUTTON_BAR_TEXT[4], style='MyRed.TButton')
         
         # pack obj
         b1.pack(side=LEFT, fill=Y, expand=False)
@@ -161,14 +186,14 @@ class TopButtonBar(object):
         
         # add one Separator
         s = Separator(parent, orient=VERTICAL, style='TSeparator')
-        s.pack(side=LEFT, fill=Y, expand=False)
+        s.pack(side=LEFT, fill=Y, expand=False, padx=10)
         
         b2.pack(side=LEFT, fill=Y, expand=False)
         b3.pack(side=LEFT, fill=Y, expand=False)
         
         # add one Separator
         s = Separator(parent, orient=VERTICAL, style='TSeparator')
-        s.pack(side=LEFT, fill=Y, expand=False)
+        s.pack(side=LEFT, fill=Y, expand=False, padx=10)
         
         b4.pack(side=LEFT, fill=Y, expand=False)
         
@@ -176,7 +201,7 @@ class TopButtonBar(object):
         
         # add one Separator
         s = Separator(parent, orient=VERTICAL, style='TSeparator')
-        s.pack(side=RIGHT, fill=Y, expand=False)
+        s.pack(side=RIGHT, fill=Y, expand=False, padx=10)
         
         # save it
         self.b_add_file = b1
@@ -241,12 +266,12 @@ class BottomPart(object):
         # create obj
         out = gui_base.LabelEntryButton()
         listf = gui_base.LabelEntryButton()
-        bstart = Button(parent, command=self._on_button_start, text=BOTTOM_START_BUTTON_TEXT, style='TButton')
+        bstart = Button(parent, command=self._on_button_start, text=BOTTOM_START_BUTTON_TEXT, style='MyBlue.TButton')
         
         # pack obj
         f1 = Frame(parent)
         f2 = Frame(parent)
-        out.start(f1, label_text=BOTTOM_OUT_TEXT[0], button_text=BOTTOM_OUT_TEXT[1], font=font)
+        out.start(f1, label_text=BOTTOM_OUT_TEXT[0], button_text=BOTTOM_OUT_TEXT[1], font=font, button_style='MyBlue.TButton')
         f1.pack(side=TOP, fill=X, expand=False)
         listf.start(f2, label_text=BOTTOM_LIST_TEXT[0], button_text=BOTTOM_LIST_TEXT[1], font=font)
         f2.pack(side=TOP, fill=X, expand=False)
