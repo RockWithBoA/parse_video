@@ -1,6 +1,6 @@
 # gui_base.py, part for parse_video : a fork from parseVideo. 
 # gui_base: o/ffmpeg_tkgui/gui_base: base part for ffmpeg Tk GUI. 
-# version 0.0.5.0 test201506091131
+# version 0.0.5.1 test201506091135
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -219,6 +219,8 @@ class SwitchLabelBox(object):
         return self._status
     
     def set_status(self, status):
+        l0 = self.l[0]
+        l1 = self.l[1]
         # set default style
         l0.config(style='SwitchLabelBoxOff.TLabel')
         l1.config(style='SwitchLabelBoxOff.TLabel')
