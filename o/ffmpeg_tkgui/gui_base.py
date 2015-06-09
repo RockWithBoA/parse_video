@@ -1,6 +1,6 @@
 # gui_base.py, part for parse_video : a fork from parseVideo. 
 # gui_base: o/ffmpeg_tkgui/gui_base: base part for ffmpeg Tk GUI. 
-# version 0.0.4.0 test201506082234
+# version 0.0.5.0 test201506091131
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -160,6 +160,74 @@ class LabelEntryButton(object):
         self.e.set_text(text)
     
     # end LabelEntryButton class
+
+# SwitchLabelBox class
+class SwitchLabelBox(object):
+    
+    def __init__(self):
+        self.parent = None
+        self.l = []	# labels
+        
+        self.callback = None	# event callback(), status changed callback
+        
+        self._status = 0
+    
+    def _send(self, e_type=None):
+        if self.callback != None:
+            self.callback(e_type)
+    
+    def _on_sub_click0(self, event=None):
+        # check status change
+        if self._status == 0:
+            return	# nothing to do
+        # set status and send callback
+        self.set_status(0)
+        self._send()
+        # process end
+    
+    def _on_sub_click1(self, event=None):
+        # check status change
+        if self._status == 1:
+            return	# nothing to do
+        # set status and send callback
+        self.set_status(1)
+        self._send()
+        # process end
+    
+    def start(self, parent, text=['', ''], status=0):
+        # create sub Label
+        l0 = Label(parent, text=text[0])
+        l1 = Label(parent, text=text[1])
+        self.l.append(l0)
+        self.l.append(l1)
+        # create styles
+        style = Style()
+        style.configure('SwitchLabelBoxOff.TLabel', background='#ccc', foreground='#444')
+        style.configure('SwitchLabelBoxOn.TLabel', background='#00f', foreground='#fff')
+        # set default status
+        self.set_status(status)
+        # pack sub
+        l0.pack(side=LEFT, fill=BOTH, expand=True)
+        l1.pack(side=RIGHT, fill=BOTH, expand=True)
+        # add event callback
+        l0.bind('<Button-1>', self._on_sub_click0)
+        l1.bind('<Button-1>', self._on_sub_click1)
+        # create UI done
+    
+    # operations
+    def get_status(self):
+        return self._status
+    
+    def set_status(self, status):
+        # set default style
+        l0.config(style='SwitchLabelBoxOff.TLabel')
+        l1.config(style='SwitchLabelBoxOff.TLabel')
+        # set on style
+        self.l[status].config(style='SwitchLabelBoxOn.TLabel')
+        self._status = status
+        # set status done
+    
+    # end SwitchLabelBox class
 
 # end gui_base.py
 
