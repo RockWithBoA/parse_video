@@ -1,6 +1,6 @@
 # gui_base.py, part for parse_video : a fork from parseVideo. 
 # gui_base: o/ffmpeg_tkgui/gui_base: base part for ffmpeg Tk GUI. 
-# version 0.0.5.1 test201506091135
+# version 0.0.8.0 test201506091254
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -117,6 +117,15 @@ class TextBox(object):
     def add_text(self, text='', pos=END):
         self.t.insert(pos, text)
     
+    # insert a frame in text, and return that frame
+    def insert_frame(self):
+        t = self.t
+        f = Frame(t)
+        t.window_create(END, window=f)
+        f.pack(side=TOP, fill=BOTH, expand=True)
+        # done
+        return f
+    
     # end TextBox class
 
 # label, entry, button three obj in one line
@@ -161,6 +170,38 @@ class LabelEntryButton(object):
     
     # end LabelEntryButton class
 
+# LabelEntry, no Button
+class LabelEntryBox(object):
+    
+    def __init__(self):
+        self.parent = None
+        self.l = None	# Label
+        self.e = None	# EntryBox
+    
+    def start(self, parent, label_text='', font=None):
+        # create sub obj
+        e = EntryBox()
+        l = Label(parent, text=label_text, font=font)
+        # pack element
+        l.pack(side=LEFT, fill=Y, expand=False)
+        e.start(parent, font=font)
+        e.e.pack(side=RIGHT, fill=BOTH, expand=True)
+        
+        # save it
+        self.parent = parent
+        self.l = l
+        self.e = e
+        # create UI done
+    
+    # operactions
+    def get_text(self):
+        return self.e.get_text()
+    
+    def set_text(self, text=''):
+        self.e.set_text(text)
+    
+    # end LabelEntryBox class
+
 # SwitchLabelBox class
 class SwitchLabelBox(object):
     
@@ -200,6 +241,7 @@ class SwitchLabelBox(object):
         l1 = Label(parent, text=text[1])
         self.l.append(l0)
         self.l.append(l1)
+        self.parent = parent
         # create styles
         style = Style()
         style.configure('SwitchLabelBoxOff.TLabel', background='#ccc', foreground='#444')
@@ -230,6 +272,49 @@ class SwitchLabelBox(object):
         # set status done
     
     # end SwitchLabelBox class
+
+# LabelSwitch, Label with a SwitchLabelBox
+class LabelSwitchBox(object):
+    
+    def __init__(self):
+        self.parent = None
+        self.l = None	# Label
+        self.s = None	# SwitchLabelBox
+        
+        self.callback = None
+    
+    def _send(self, event=None):
+        if self.callback != None:
+            self.callback()
+    
+    def _on_sub_event(self, event=None):
+        self._send(event)
+    
+    def start(self, parent, label_text='', switch_text=['', '']):
+        # create obj
+        l = Label(parent, text=label_text)
+        s = SwitchLabelBox()
+        self.parent = parent
+        self.l = l
+        self.s = s
+        # pack obj
+        l.pack(side=LEFT, fill=Y, expand=False)
+        f = Frame(parent)
+        s.start(f, text=switch_text)
+        f.pack(side=RIGHT, fill=Y, expand=False)
+        # set callback
+        s.callback = self._on_sub_event
+        
+        # create UI done
+    
+    # operations
+    def get_status(self):
+        return self.s.get_status()
+    
+    def set_status(self, status=0):
+        self.s.set_status(status)
+    
+    # end LabelSwitchBox class
 
 # end gui_base.py
 

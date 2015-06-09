@@ -1,6 +1,6 @@
 # gui_setting.py, part for parse_video : a fork from parseVideo. 
 # gui_setting: o/ffmpeg_tkgui/gui_setting: PartSetting for ffmpeg Tk GUI. 
-# version 0.0.1.1 test201506082107
+# version 0.0.2.0 test201506091254
 # author sceext <sceext@foxmail.com> 2009EisF2015, 2015.06. 
 # copyright 2015 sceext
 #
@@ -34,6 +34,21 @@ from . import gui_base
 
 # global vars
 
+TOP_PART_TITLE = '常用'
+TOP_PART_TITLE_RIGHT = '(常用设置会自动保存)'
+BOTTOM_PART_TITLE = '高级'
+BOTTOM_PART_TITLE_BUTTON_TEXT = ['刷新', '保存高级设置']
+
+TOP_ITEM1_TEXT = ['默认输出目录', '更改']
+TOP_ITEM2_TEXT = ['自动更改默认输出目录为最后一次的输出目录', ['开启', '关闭']]
+
+BITEM_TEXT1 = ['ffmpeg 可执行文件', '更改']
+BITEM_TEXT2 = ['临时文件目录', '更改']
+BITEM_TEXT3 = '生成的 ffmpeg 列表文件名'
+BITEM_TEXT4 = ['最后一次添加文件目录', '更改']
+BITEM_TEXT5 = ['最后一次导入列表文件目录', '更改']
+BITEM_TEXT6 = ['最后一次合并输出目录', '更改']
+
 # functions
 
 # class
@@ -43,12 +58,244 @@ class PartSetting(object):
     
     def __init__(self):
         self.parent = None
+        
+        self.host_t = None	# host TextBox
+        self.host_f = None	# host frame
+        
+        self.top = None	# top part
+        self.b = None	# bottom part
+        
+        self.callback = None	# event callback(type)
+        # type in []
+    
+    def _send(self, event=None):
         pass
     
-    def start(self, parent):
-        pass
+    # TODO on sub event
+    
+    def start(self, parent, font=None):
+        # create sub
+        host_t = gui_base.TextBox()
+        self.parent = parent
+        self.host_t = host_t
+        
+        top = TopBox()
+        self.top = top
+        
+        b = BottomBox()
+        self.b = b
+        
+        # pack it
+        host_t.start(parent, font=font)
+        host_t.enable()
+        host_t.clear()
+        host_f = host_t.insert_frame()	# create host frame
+        host_f.pack(side=TOP, fill=BOTH, expand=True)
+        host_t.disable()
+        self.host_f = host_f
+        
+        f1 = Frame(host_f)
+        top.start(f1, font=font)
+        f1.pack(side=TOP, fill=X, expand=False)
+        
+        s1 = Sepacator(host_f, orient=HORIZONTAL, style='TSeparator')
+        s1.pack(side=TOP, fill=X, expand=False)
+        
+        f2 = Frame(host_f)
+        b.start(f2, font=font)
+        f2.pack(side=TOP, fill=X, expand=False)
+        
+        # TODO set callbacks
+        
+        # create UI done
     
     # end PartSetting class
+
+# top part, frequently settings
+class TopBox(object):
+    
+    def __init__(self):
+        self.parent = None
+        self.t = None	# TopBoxTitle
+        
+        self.item_default_output = None	# default output dir
+        self.item_auto_dir1 = None	# auto change defualt output dir to last used
+        
+        self.callback = None	# event callback(type)
+        # event in ['change_output', 'change_auto_switch']
+    
+    def _send(self, event=None):
+        pass
+    
+    def _on_change_output_dir(self, event=None):
+        pass
+    
+    def _on_change_auto_switch(self, event=None):
+        pass
+    
+    def start(self, parent, font=None):
+        # create sub
+        t = TopBoxTitle()
+        item_d = gui_base.LabelEntryButton()
+        item_a = gui_base.LabelSwitchBox()
+        self.parent = parent
+        self.t = t
+        self.item_default_output = item_d
+        self.item_auto_dir1 = item_a
+        
+        # pack it
+        f1 = Frame(parent)
+        t.start(f1)
+        f2 = Frame(parent)
+        item_d.start(f2, label_text=TOP_ITEM1_TEXT[0], button_text=TOP_ITEM1_TEXT[1], font=font)
+        f3 = Frame(parent)
+        item_a.start(f3, label_text=TOP_ITEM2_TEXT[0], switch_text=TOP_ITEM2_TEXT[1])
+        
+        f1.pack(side=TOP, fill=X, expand=False)
+        f2.pack(side=TOP, fill=X, expand=False)
+        f3.pack(side=TOP, fill=X, expand=False)
+        
+        # set callback
+        # TODO
+        
+        # create UI done
+    
+    # end TopBox class
+
+# top part title
+class TopBoxTitle(object):
+    
+    def __init__(self):
+        self.parent = None
+        self.l1 = None	# top title left label
+        self.l2 = None	# top title right label
+    
+    def start(self, parent):
+        # create element
+        l1 = Label(parent, text=TOP_PART_TITLE)
+        l2 = Label(parent, text=TOP_PART_TITLE_RIGHT)
+        self.parent = parent
+        self.l1 = l1
+        self.l2 = l2
+        
+        # pack it
+        l1.pack(side=LEFT, fill=Y, expand=False)
+        l2.pack(side=RIGHT, fill=Y, expand=False)
+        
+        # create UI done
+    
+    # end TopBoxTitle class
+
+# bottom part, advanced settings
+class BottomBox(object):
+    
+    def __init__(self):
+        self.parent = None
+        self.t = None	# BottomBoxTitle
+        
+        self.item_ffmpeg_bin = None	# set ffmpeg bin file path
+        self.item_tmp_path = None	# set tmp file path
+        self.item_list_name = None	# output tmp file, ffmpeg list file
+        self.item_last_add_file = None	# last add file path dir
+        self.item_last_import_list = None	# last import list file path dir
+        self.item_last_output = None	# last output merged file dir
+    
+    # set callbacks, TODO
+    
+    def start(self, parent, font=None):
+        # create obj
+        t = BottomBoxTitle()
+        item1 = gui_base.LabelEntryButton()
+        item2 = gui_base.LabelEntryButton()
+        item3 = gui_base.LabelEntryBox()
+        item4 = gui_base.LabelEntryButton()
+        item5 = gui_base.LabelEntryButton()
+        item6 = gui_base.LabelEntryButton()
+        # save it
+        self.parent = parent
+        self.t = t
+        self.item_ffmpeg_bin = item1
+        self.item_tmp_path = item2
+        self.item_list_name = item3
+        self.item_last_add_file = item4
+        self.itme_last_import_list = item5
+        self.item_last_output = item6
+        
+        # pack it
+        f1 = Frame(parent)
+        t.start(f1)
+        f1.pack(side=TOP, fill=X, expand=False)
+        
+        f2 = Frame(parent)
+        item1.start(f2, label_text=BITEM_TEXT1[0], button_text=BITEM_TEXT1[1], font=font)
+        f2.pack(side=TOP, fill=X, expand=False)
+        
+        f3 = Frame(parent)
+        item1.start(f3, label_text=BITEM_TEXT2[0], button_text=BITEM_TEXT2[1], font=font)
+        f3.pack(side=TOP, fill=X, expand=False)
+        
+        f4 = Frame(parent)
+        item1.start(f4, label_text=BITEM_TEXT3, font=font)
+        f4.pack(side=TOP, fill=X, expand=False)
+        
+        f5 = Frame(parent)
+        item1.start(f5, label_text=BITEM_TEXT4[0], button_text=BITEM_TEXT4[1], font=font)
+        f5.pack(side=TOP, fill=X, expand=False)
+        
+        f6 = Frame(parent)
+        item1.start(f6, label_text=BITEM_TEXT5[0], button_text=BITEM_TEXT5[1], font=font)
+        f6.pack(side=TOP, fill=X, expand=False)
+        
+        f7 = Frame(parent)
+        item1.start(f7, label_text=BITEM_TEXT6[0], button_text=BITEM_TEXT6[1], font=font)
+        f7.pack(side=TOP, fill=X, expand=False)
+        
+        # TODO
+        
+        # create UI done
+    
+    # end BottomBox class
+
+# bottom part title
+class BottomBoxTitle(object):
+    
+    def __init__(self):
+        self.parent = None
+        self.l = None	# title Label
+        self.b_refresh = None	# refresh button
+        self.b_save = None	# save setting button
+        
+        self.callback = None	# event callback
+        # event in ['b_refresh', 'b_save']
+    
+    def _send(self, event=None):
+        if self.callback != None:
+            self.callback(event)
+    
+    def _on_sub_refresh(self, event=None):
+        self._send('b_refresh')
+    
+    def _on_sub_save(self, event=None):
+        self._send('b_save')
+    
+    def start(self, parent):
+        # create obj
+        l = Label(parent, text=BOTTOM_PART_TITLE)
+        b1 = Button(parent, command=self._on_sub_refresh, text=BOTTOM_PART_TITLE_BUTTON_TEXT[0])
+        b2 = Button(parent, command=self._on_sub_save, text=BOTTOM_PART_TITLE_BUTTON_TEXT[1])
+        self.parent = parent
+        self.l = l
+        self.b_refresh = b1
+        self.b_save = b2
+        
+        # pack it
+        l.pack(side=LEFT, fill=Y, expand=False)
+        b2.pack(side=RIGHT, fill=Y, expand=False)
+        b1.pack(side=RIGHT, fill=Y, expand=False)
+        
+        # create UI done
+    
+    # end BottomBoxTitle class
 
 # end gui_setting.py
 
