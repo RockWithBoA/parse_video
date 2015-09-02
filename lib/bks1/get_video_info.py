@@ -350,7 +350,7 @@ def get_real_urls(vinfo, flag_debug=False):
             if (not 'url' in f) or (f['url'] == None) or (f['url'] == ''):
                 continue	# skip this url
             # set this url
-            f['url'] = real[url_i]
+            f['url'] = '[' + str(url_i + 1) + ']' + real[url_i]
             url_i += 1
     # debug info
     if flag_debug:
